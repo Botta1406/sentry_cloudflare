@@ -33,7 +33,7 @@ export default function TodoList() {
       try {
         setLoading(true);
         setError(null);
-        const data = await todoAP.getAllTodos();
+        const data = await todoAPI.getAllTodos();
         setTodos(data);
       } catch (err) {
         const message =

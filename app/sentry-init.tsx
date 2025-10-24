@@ -64,12 +64,14 @@ export function SentryInit() {
               blockAllMedia: false,
             }),
             new Sentry.BrowserTracing(),
+            // Capture console logs
+            Sentry.consoleIntegration(),
           ],
           tracesSampleRate: 1.0,
           replaysSessionSampleRate: 0.1,
           replaysOnErrorSampleRate: 1.0,
           environment: typeof window !== "undefined" ? "development" : "unknown",
-          debug: true,
+          debug: false,
           allowUrls: [/.*/],
           ignoreErrors: [
             "top.GLOBALS",
@@ -96,6 +98,70 @@ export function SentryInit() {
     };
 
     initializeSentry();
+  }, []);
+
+  // Capture console logs as Sentry events (with filtering for Sentry internal logs)
+  useEffect(() => {
+    const originalLog = console.log;
+    const originalError = console.error;
+    const originalWarn = console.warn;
+    const originalInfo = console.info;
+    const originalDebug = console.debug;
+
+    // Helper function to check if message should be filtered
+    const shouldFilterLog = (args: unknown[]): boolean => {
+      const message = String(args.join(" "));
+      // Filter out Sentry internal logs
+      return (
+        message.includes("Sentry Logger") ||
+        message.includes("[Sentry") ||
+        message.includes("Integration installed") ||
+        message.includes("[Tracing]")
+      );
+    };
+
+    console.log = function (...args) {
+      originalLog.apply(console, args);
+      if (!shouldFilterLog(args)) {
+        Sentry.captureMessage(String(args.join(" ")), "info");
+      }
+    };
+
+    console.error = function (...args) {
+      originalError.apply(console, args);
+      if (!shouldFilterLog(args)) {
+        Sentry.captureMessage(String(args.join(" ")), "error");
+      }
+    };
+
+    console.warn = function (...args) {
+      originalWarn.apply(console, args);
+      if (!shouldFilterLog(args)) {
+        Sentry.captureMessage(String(args.join(" ")), "warning");
+      }
+    };
+
+    console.info = function (...args) {
+      originalInfo.apply(console, args);
+      if (!shouldFilterLog(args)) {
+        Sentry.captureMessage(String(args.join(" ")), "info");
+      }
+    };
+
+    console.debug = function (...args) {
+      originalDebug.apply(console, args);
+      if (!shouldFilterLog(args)) {
+        Sentry.captureMessage(String(args.join(" ")), "debug");
+      }
+    };
+
+    return () => {
+      console.log = originalLog;
+      console.error = originalError;
+      console.warn = originalWarn;
+      console.info = originalInfo;
+      console.debug = originalDebug;
+    };
   }, []);
 
   return null;

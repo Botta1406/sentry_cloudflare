@@ -7,3 +7,9 @@ compatibility_flags = ["nodejs_compat"]
 [[kv_namespaces]]
 binding = "TODOS"
 id = "b92576ecf20d43ad8345de3f2bc5c1d4"
+
+# Secrets Store binding
+[[secrets_store_secrets]]
+binding = "SENTRY_DSN"
+store_id = "de975b1c461847ba9d6abc6ddfabfa5a"
+secret_name = "SENTRY_DSN"
