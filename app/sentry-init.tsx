@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import * as Sentry from "@sentry/nextjs";
+import { BrowserTracing, Replay } from "@sentry/react";
 
 /**
  * Client-side Sentry initialization
@@ -59,11 +60,11 @@ export function SentryInit() {
         Sentry.init({
           dsn: DSN,
           integrations: [
-            new Sentry.Replay({
+            new Replay({
               maskAllText: false,
               blockAllMedia: false,
             }),
-            new Sentry.BrowserTracing(),
+            new BrowserTracing(),
           ],
           tracesSampleRate: 1.0,
           replaysSessionSampleRate: 0.1,
@@ -76,6 +77,9 @@ export function SentryInit() {
             "chrome-extension://",
             "moz-extension://",
           ],
+          // Enable Logs feature for Sentry
+          enableLogs: true,
+          sendDefaultPii: true,
         });
 
         console.log("[Sentry Init] ✅ Sentry initialized successfully");

@@ -30,7 +30,7 @@ export const todoAPI = {
       return response.data.data || [];
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { endpoint: "/api/todos" },
+        tags: { endpoint: "/api/todos", action: "getAllTodos" },
       });
       throw error;
     }
@@ -42,7 +42,7 @@ export const todoAPI = {
       return response.data.data!;
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { endpoint: `/api/todos/${id}` },
+        tags: { endpoint: `/api/todos/${id}`, action: "getTodo" },
       });
       throw error;
     }
@@ -57,7 +57,7 @@ export const todoAPI = {
       return response.data.data!;
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { endpoint: "/api/todos", action: "create" },
+        tags: { endpoint: "/api/todos", action: "createTodo" },
       });
       throw error;
     }
@@ -72,7 +72,7 @@ export const todoAPI = {
       return response.data.data!;
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { endpoint: `/api/todos/${id}`, action: "update" },
+        tags: { endpoint: `/api/todos/${id}`, action: "updateTodo" },
       });
       throw error;
     }
@@ -83,7 +83,7 @@ export const todoAPI = {
       await apiClient.delete(`/api/todos/${id}`);
     } catch (error) {
       Sentry.captureException(error, {
-        tags: { endpoint: `/api/todos/${id}`, action: "delete" },
+        tags: { endpoint: `/api/todos/${id}`, action: "deleteTodo" },
       });
       throw error;
     }

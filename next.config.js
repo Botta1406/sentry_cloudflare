@@ -14,7 +14,7 @@ module.exports = withSentryConfig(nextConfig, {
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
   // Suppresses source map uploading during build
-  silent: false,
+  silent: true,
 
   // For resolving JavaScript modules into source maps in Error Stack-Trace
   // See https://docs.sentry.io/product/cli/releases/ for more info.
@@ -25,11 +25,11 @@ module.exports = withSentryConfig(nextConfig, {
   authToken: process.env.SENTRY_AUTH_TOKEN,
 
   // Only print logs for uploading source maps
-  dryRun: false,
+  dryRun: true,
 
   // Upload source maps
   sourceMaps: {
-    disable: false,
+    disable: true,
     deleteSourcemapsAfterUpload: false,
   },
 });
